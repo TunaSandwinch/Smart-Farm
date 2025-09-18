@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import Container from 'react-bootstrap/Container'
-import './App.css'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import SensorCard from './components/SensorCard.jsx'
@@ -18,6 +17,7 @@ import { TbTemperatureSun, TbRulerMeasure2, TbPoo, TbTemperature } from "react-i
 import { BsSpeedometer2, BsDroplet } from "react-icons/bs"
 import { PiBird } from "react-icons/pi"
 import { IoFishOutline } from "react-icons/io5"
+import './App.css'
 // Keys match the "system_status" table columns we discussed before.
 const EMPTY = {
   env_humidity: null,

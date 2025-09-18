@@ -1,13 +1,13 @@
 body {
-  background-color: #ABA9C3; 
+  background-color: #ABA9C3 !important; 
 }
 
 .navbar {
-  background-color: #B2ECE1 !important; /* deep navy blue */
+  background-color: #B2ECE1 !important; 
 }
 
 .card {
-  background-color: #FCF7F8;
-  border: none;
-  box-shadow: 0 4px 10px rgba(30, 58, 138, 0.15); /* subtle ocean blue shadow */
+  background-color: #FCF7F8 !important;
+  border: none !important;
+  box-shadow: 0 4px 10px rgba(30, 58, 138, 0.15) !important;
 }
