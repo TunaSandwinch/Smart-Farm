@@ -1,14 +1,12 @@
 import Card from 'react-bootstrap/Card'
 
-export default function SensorCard({ title, value, unit, icon: Icon}) {
+export default function SensorCard({ title, value, unit, icon: Icon, subtitle}) {
   // Compute subtitle dynamically if function is passed
-  const subtitle = getSubtitle ? getSubtitle(value) : null
-
   return (
     <Card className="shadow-sm mb-3">
       <Card.Body>
         <div className="d-flex align-items-center mb-2">
-          {Icon && <Icon className="me-2 text-success" size={24} />}
+          {Icon && <Icon className="me-2 text-dark" size={24} />}
           <Card.Title className="fw-semibold m-0">{title}</Card.Title>
         </div>
 
@@ -18,8 +16,7 @@ export default function SensorCard({ title, value, unit, icon: Icon}) {
             <small className="text-muted">{unit}</small>
           ) : null}
         </Card.Text>
-
-        {subtitle ? <Card.Subtitle className="text-muted mt-1">{subtitle}</Card.Subtitle> : null}
+        <Card.Subtitle className="text-muted mt-1">{subtitle}</Card.Subtitle>
       </Card.Body>
     </Card>
   )
