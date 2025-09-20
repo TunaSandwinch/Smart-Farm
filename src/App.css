@@ -11,3 +11,25 @@ body {
   border: none !important;
   box-shadow: 0 4px 10px rgba(30, 58, 138, 0.15) !important;
 }
+
+/* Make navbar links bigger + bolder */
+.navbar .nav-link {
+  font-size: 1.2rem;       /* bigger text */
+  font-weight: 600;        /* bold */
+  color: black !important; /* default color */
+  margin-left: 1rem;       /* spacing between items */
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+.navbar .nav-link:hover {
+  color: #275DAD !important;  /* ocean blue on hover */
+  transform: scale(1.05);     /* subtle zoom */
+}
+
+/* Active page highlight */
+.navbar .nav-link.active {
+  color: #275DAD !important;   /* ocean blue */
+  font-weight: 700;            /* extra bold */
+  border-bottom: 3px solid #275DAD; /* underline highlight */
+}
