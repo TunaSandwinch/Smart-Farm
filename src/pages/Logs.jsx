@@ -137,9 +137,20 @@ export default function Logging() {
   const confirmDelete = async () => {
     const { id, type } = deleteConfirm;
 
+    const columnMap = {
+    "Fish Harvest": "fish_harvest",
+    "Chicken Harvest": "chicken_harvest",
+    "Lettuce Harvest": "lettuce_harvest",
+    };
+
+    const columnName = columnMap[type];
+     if (!columnName) {
+      alert("Invalid log type");
+      return;
+    }
     const { error } = await supabase
       .from("system_logs")
-      .delete()
+      .update({ [columnName]: null }) // set only that column to NULL
       .eq("id", id);
 
     if (error) {
