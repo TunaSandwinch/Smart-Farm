@@ -23,7 +23,51 @@ export default function Logging() {
     id: null,
     type: null,
   });
+  const [editConfirm, setEditConfirm] = useState({
+    show: false,
+    id: null,
+    type: null,
+    value: "",
+  });
 
+  // Handle Edit button click
+  const handleEdit = (log, type) => {
+    const value =
+      type === "Fish Harvest"
+        ? log.fish_harvest
+        : type === "Chicken Harvest"
+        ? log.chicken_harvest
+        : log.lettuce_harvest;
+
+    setEditConfirm({ show: true, id: log.id, type, value });
+  };
+
+  // Confirm Edit
+  const confirmEdit = async () => {
+    const { id, type, value } = editConfirm;
+
+    const columnMap = {
+      "Fish Harvest": "fish_harvest",
+      "Chicken Harvest": "chicken_harvest",
+      "Lettuce Harvest": "lettuce_harvest",
+    };
+
+    const columnName = columnMap[type];
+
+    const { error } = await supabase
+      .from("system_logs")
+      .update({ [columnName]: parseInt(value, 10) })
+      .eq("id", id);
+
+    if (error) {
+      alert("Error updating log: " + error.message);
+    } else {
+      alert(`${type} log updated successfully!`);
+      fetchLogs(); // refresh
+    }
+
+    setEditConfirm({ show: false, id: null, type: null, value: "" });
+  };
   // Fetch logs from Supabase
   useEffect(() => {
     fetchLogs();
@@ -208,6 +252,45 @@ export default function Logging() {
           </Button>
         </Modal.Footer>
       </Modal>
+    
+      {/* Confirmation Modal for Edit */}
+      <Modal
+        show={editConfirm.show}
+        onHide={() => setEditConfirm({ show: false, id: null, type: null, value: "" })}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Edit {editConfirm.type} Log</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Control
+            type="text"
+            value={editConfirm.value}
+            onChange={(e) =>
+              setEditConfirm((prev) => ({
+                ...prev,
+                value: e.target.value.replace(/\D/g, "").slice(0, 3), // digits only
+              }))
+            }
+            maxLength={3}
+            inputMode="numeric"
+            className="text-center"
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() =>
+              setEditConfirm({ show: false, id: null, type: null, value: "" })
+            }
+          >
+            Cancel
+          </Button>
+          <Button variant="success" onClick={confirmEdit} disabled={!editConfirm.value}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Stacked Tables */}
       <h3 className="mt-5 mb-3">Fish Harvest Logs</h3>
@@ -227,6 +310,14 @@ export default function Logging() {
               <td>{log.fish_harvest}</td>
               <td>{new Date(log.timestamp).toLocaleString()}</td>
               <td>
+                <Button
+                  variant="warning"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => handleEdit(log, "Fish Harvest")}
+                >
+                  Edit
+                </Button>
                 <Button
                   variant="danger"
                   size="sm"
@@ -258,6 +349,14 @@ export default function Logging() {
               <td>{new Date(log.timestamp).toLocaleString()}</td>
               <td>
                 <Button
+                  variant="warning"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => handleEdit(log, "Lettuce Harvest")}
+                >
+                  Edit
+                </Button>
+                <Button
                   variant="danger"
                   size="sm"
                   onClick={() => handleDelete(log.id, "Lettuce Harvest")}
@@ -287,6 +386,14 @@ export default function Logging() {
               <td>{log.chicken_harvest}</td>
               <td>{new Date(log.timestamp).toLocaleString()}</td>
               <td>
+                <Button
+                  variant="warning"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => handleEdit(log, "Chicken Harvest")}
+                >
+                  Edit
+                </Button>
                 <Button
                   variant="danger"
                   size="sm"
