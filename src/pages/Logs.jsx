@@ -1,16 +1,52 @@
 // src/pages/Logging.jsx
-import { useState } from "react";
-import { Container, Card, Button, Form, Modal } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import {
+  Container,
+  Card,
+  Button,
+  Form,
+  Modal,
+  Table,
+} from "react-bootstrap";
 import { supabase } from "../lib/supabaseClient";
 import { FaFish, FaSeedling, FaDrumstickBite } from "react-icons/fa";
 
 export default function Logging() {
   const [showModal, setShowModal] = useState(false);
   const [currentLog, setCurrentLog] = useState(null);
-  const [values, setValues] = useState({}); // Store inputs per card
+  const [values, setValues] = useState({});
+  const [fishLogs, setFishLogs] = useState([]);
+  const [lettuceLogs, setLettuceLogs] = useState([]);
+  const [chickenLogs, setChickenLogs] = useState([]);
+  const [deleteConfirm, setDeleteConfirm] = useState({
+    show: false,
+    id: null,
+    type: null,
+  });
+
+  // Fetch logs from Supabase
+  useEffect(() => {
+    fetchLogs();
+  }, []);
+
+  const fetchLogs = async () => {
+    const { data, error } = await supabase
+      .from("system_logs")
+      .select("*")
+      .order("timestamp", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching logs:", error.message);
+      return;
+    }
+
+    // Separate logs by type
+    setFishLogs(data.filter((d) => d.fish_harvest !== null));
+    setLettuceLogs(data.filter((d) => d.lettuce_harvest !== null));
+    setChickenLogs(data.filter((d) => d.chicken_harvest !== null));
+  };
 
   const handleInputChange = (type, input) => {
-    // Allow only digits, max 3 characters
     const sanitized = input.replace(/\D/g, "").slice(0, 3);
     setValues((prev) => ({ ...prev, [type]: sanitized }));
   };
@@ -24,7 +60,6 @@ export default function Logging() {
     const value = values[currentLog];
     if (!value) return;
 
-    // Map log type to the correct DB column
     const columnMap = {
       "Fish Harvest": "fish_harvest",
       "Chicken Harvest": "chicken_harvest",
@@ -35,7 +70,7 @@ export default function Logging() {
 
     const { error } = await supabase.from("system_logs").insert([
       {
-        [columnName]: parseInt(value, 10), // dynamic column
+        [columnName]: parseInt(value, 10),
         timestamp: new Date(),
       },
     ]);
@@ -44,28 +79,60 @@ export default function Logging() {
       alert("Error logging data: " + error.message);
     } else {
       alert(`${currentLog} logged successfully!`);
+      fetchLogs(); // refresh after insert
     }
 
-    // Clear only the logged field
     setValues((prev) => ({ ...prev, [currentLog]: "" }));
     setShowModal(false);
   };
 
+  const handleDelete = (id, type) => {
+    setDeleteConfirm({ show: true, id, type });
+  };
+
+  const confirmDelete = async () => {
+    const { id, type } = deleteConfirm;
+
+    const { error } = await supabase
+      .from("system_logs")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      alert("Error deleting log: " + error.message);
+    } else {
+      alert(`${type} log deleted successfully!`);
+      fetchLogs(); // refresh after delete
+    }
+
+    setDeleteConfirm({ show: false, id: null, type: null });
+  };
 
   const logItems = [
-    { type: "Fish Harvest", icon: <FaFish size={24} className="me-2 text-primary" /> },
-    { type: "Chicken Harvest", icon: <FaDrumstickBite size={24} className="me-2 text-danger" /> },
-    { type: "Lettuce Harvest", icon: <FaSeedling size={24} className="me-2 text-success" /> },
+    {
+      type: "Fish Harvest",
+      icon: <FaFish size={24} className="me-2 text-primary" />,
+    },
+    {
+      type: "Chicken Harvest",
+      icon: <FaDrumstickBite size={24} className="me-2 text-danger" />,
+    },
+    {
+      type: "Lettuce Harvest",
+      icon: <FaSeedling size={24} className="me-2 text-success" />,
+    },
   ];
 
   return (
     <Container className="py-4">
       <h2 className="h3 mb-3">Log Harvest Data</h2>
+
+      {/* Logging Cards */}
       {logItems.map((item) => (
         <Card
           key={item.type}
-          className="mb-3 shadow-sm text-center"
-          style={{ width: "500px", height: "250px", margin: "0 auto" }}
+          className="mb-3 shadow-sm text-center mx-auto"
+          style={{ maxWidth: "500px", height: "250px" }}
         >
           <Card.Body className="d-flex flex-column justify-content-center align-items-center">
             <Card.Title className="fw-bold d-flex align-items-center mb-3">
@@ -76,16 +143,17 @@ export default function Logging() {
               placeholder="Enter quantity"
               value={values[item.type] || ""}
               onChange={(e) => handleInputChange(item.type, e.target.value)}
-              style={{ width: "300px", textAlign: "center" }}
-              maxLength={3} // Just in case
-              inputMode="numeric" // On mobile shows number keypad
+              className="text-center"
+              style={{ maxWidth: "300px" }}
+              maxLength={3}
+              inputMode="numeric"
             />
             <Button
-              className="mt-3"
-              style={{ width: "150px" }} // wider button
+              className="mt-3 w-100"
+              style={{ maxWidth: "200px" }}
               variant="primary"
               onClick={() => handleLog(item.type)}
-                disabled={!values[item.type] || values[item.type].trim() === ""}
+              disabled={!values[item.type] || values[item.type].trim() === ""}
             >
               Log
             </Button>
@@ -93,7 +161,7 @@ export default function Logging() {
         </Card>
       ))}
 
-      {/* Confirmation Modal */}
+      {/* Confirmation Modal for Logging */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Log</Modal.Title>
@@ -114,6 +182,123 @@ export default function Logging() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Confirmation Modal for Delete */}
+      <Modal
+        show={deleteConfirm.show}
+        onHide={() => setDeleteConfirm({ show: false, id: null, type: null })}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this{" "}
+          <strong>{deleteConfirm.type}</strong> log?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setDeleteConfirm({ show: false, id: null, type: null })}
+          >
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={confirmDelete}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Stacked Tables */}
+      <h3 className="mt-5 mb-3">Fish Harvest Logs</h3>
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Quantity</th>
+            <th>Timestamp</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {fishLogs.map((log) => (
+            <tr key={log.id}>
+              <td>{log.id}</td>
+              <td>{log.fish_harvest}</td>
+              <td>{new Date(log.timestamp).toLocaleString()}</td>
+              <td>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleDelete(log.id, "Fish Harvest")}
+                >
+                  Delete
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+
+      <h3 className="mt-5 mb-3">Lettuce Harvest Logs</h3>
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Quantity</th>
+            <th>Timestamp</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {lettuceLogs.map((log) => (
+            <tr key={log.id}>
+              <td>{log.id}</td>
+              <td>{log.lettuce_harvest}</td>
+              <td>{new Date(log.timestamp).toLocaleString()}</td>
+              <td>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleDelete(log.id, "Lettuce Harvest")}
+                >
+                  Delete
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+
+      <h3 className="mt-5 mb-3">Chicken Harvest Logs</h3>
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Quantity</th>
+            <th>Timestamp</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {chickenLogs.map((log) => (
+            <tr key={log.id}>
+              <td>{log.id}</td>
+              <td>{log.chicken_harvest}</td>
+              <td>{new Date(log.timestamp).toLocaleString()}</td>
+              <td>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleDelete(log.id, "Chicken Harvest")}
+                >
+                  Delete
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </Container>
   );
 }
