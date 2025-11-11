@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom"; // use NavLink instead of Link
 
 export default function Header() {
   return (
-    <Navbar expand="lg" className="mb-4 shadow-sm py-3">
+    <Navbar expand="lg" sticky="top" className="mb-4 shadow-sm py-3">
       <Container fluid>
         <Navbar.Brand className="d-flex align-items-center fs-4 text-black">
           <FaPlantWilt className="me-2 text-success" size={28} />
