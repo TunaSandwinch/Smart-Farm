@@ -1,55 +1,58 @@
 export function envHumiditySubtitle(value) {
-  if (value == null) return 'No data'
-  if (value < 30) return 'miss ko na sya'
-  if (value <= 60) return 'Optimal'
-  return 'Too humid'
+  if (value == null) return "No data";
+  if (value < 40) return "Too dry";
+  if (value <= 60) return "Optimal";
+  return "Too humid";
 }
 
 export function envTemperatureSubtitle(value) {
-  if (value == null) return 'No data'
-  if (value < 30) return 'lameg'
-  if (value <= 60) return 'Optimal'
-  return 'inet'
+  if (value == null) return "No data";
+  if (value < 24) return "Too cold";
+  if (value <= 32) return "Optimal";
+  return "Too hot";
 }
 
 export function fFeedSubtitle(value) {
   if (value == null) return 'No data'
-  if (value < 30) return 'lapit na maubos'
-  if (value <= 60) return 'kalahit na'
-  return 'Dami pa'
+  if (value > 15) return 'Full'
+  if (value >= 10) return 'Half empty'
+  if (value >= 1) return 'Almost empty'
+  return 'Empty'
 }
 
 export function cFeedSubtitle(value) {
   if (value == null) return 'No data'
-  if (value < 30) return 'lapit na maubos'
-  if (value <= 60) return 'kalahati na'
-  return 'Dami pa'
+  if (value > 15) return 'Full'
+  if (value >= 10) return 'Half empty'
+  if (value >= 1) return 'Almost empty'
+  return 'Empty'
 }
 
 export function waterTemperatureSubtitle(value) {
-  if (value == null) return 'No data'
-  if (value < 30) return 'malameg'
-  if (value <= 60) return 'tama lang'
-  return 'mainet'
+  if (value == null) return "No data";
+  if (value < 22) return "Too cold";
+  if (value <= 32) return "Optimal";
+  return "Too hot";
 }
 
 export function waterLevelSubtitle(value) {
   if (value == null) return 'No data'
-  if (value < 30) return 'lapit na maubos'
-  if (value <= 60) return 'kalahati na'
-  return 'Dami pa'
+  if (value >= 40) return 'Normal'
+  if (value >= 20) return 'Low'
+  return 'Critical Low'
 }
 
 export function phLevelSubtitle(value) {
-  if (value == null) return 'No data'
-  if (value < 30) return 'mababa sa neutral'
-  if (value <= 60) return 'neutral'
-  return 'acidic'
+  if (value == null) return "No data";
+  if (value < 0 || value > 14) return "Invalid pH value";
+  if (value < 7) return "Acidic";
+  if (value === 7) return "Neutral";
+  return "Basic / Alkaline";
 }
 
 export function teaLevelSubtitle(value) {
   if (value == null) return 'No data'
-  if (value < 30) return 'konti na lang'
-  if (value <= 60) return 'kalahit pa'
-  return 'dami pa'
+  if (value >= 30) return 'High'
+  if (value >= 15) return 'Normal'
+  return 'Low'
 }

@@ -1,12 +1,12 @@
 import Card from 'react-bootstrap/Card'
 
-export default function SensorCard({ title, value, unit, icon: Icon, subtitle}) {
+export default function SensorCard({ title, value, unit, icon: Icon, subtitle, color }) {
   // Compute subtitle dynamically if function is passed
   return (
     <Card className="shadow-sm mb-3">
       <Card.Body>
         <div className="d-flex align-items-center mb-2">
-          {Icon && <Icon className="me-2 text-dark" size={24} />}
+          {Icon && <Icon size={28} className={color} />}
           <Card.Title className="fw-semibold m-0">{title}</Card.Title>
         </div>
 

@@ -23,8 +23,7 @@ import {
   TbTemperature,
 } from "react-icons/tb";
 import { BsSpeedometer2, BsDroplet } from "react-icons/bs";
-import { PiBird } from "react-icons/pi";
-import { IoFishOutline } from "react-icons/io5";
+import { PiBowlFood } from "react-icons/pi";
 
 export default function Dashboard() {
   const { data, loading, error } = useSystemStatus();
@@ -32,14 +31,6 @@ export default function Dashboard() {
   return (
     <Container className="py-4">
       <h1 className="h3 mb-3">Real Time Monitoring</h1>
-      <p className="text-muted mb-4">
-        {loading
-          ? "Loading…"
-          : data.updated_at
-          ? `Last update: ${new Date(data.updated_at).toLocaleString()}`
-          : "No data yet"}
-        {error ? ` • Error: ${error}` : ""}
-      </p>
 
       <Row xs={1} md={2} lg={3}>
         <Col>
@@ -49,6 +40,7 @@ export default function Dashboard() {
             unit="%"
             icon={BsDroplet}
             subtitle={envHumiditySubtitle(data.env_humidity)}
+            color="text-primary me-2"
           />
         </Col>
         <Col>
@@ -58,6 +50,7 @@ export default function Dashboard() {
             unit="°C"
             icon={TbTemperatureSun}
             subtitle={envTemperatureSubtitle(data.env_temperature)}
+            color="text-warning me-2"
           />
         </Col>
         <Col>
@@ -67,6 +60,8 @@ export default function Dashboard() {
             unit="°C"
             icon={TbTemperature}
             subtitle={waterTemperatureSubtitle(data.water_temperature)}
+            color="text-danger me-2"
+            
           />
         </Col>
         <Col>
@@ -76,6 +71,7 @@ export default function Dashboard() {
             unit="cm"
             icon={TbRulerMeasure2}
             subtitle={waterLevelSubtitle(data.water_level)}
+            color="text-info me-2"
           />
         </Col>
         <Col>
@@ -85,6 +81,7 @@ export default function Dashboard() {
             unit="pH"
             icon={BsSpeedometer2}
             subtitle={phLevelSubtitle(data.ph_level)}
+            color="text-primary me-2"
           />
         </Col>
         <Col>
@@ -94,6 +91,7 @@ export default function Dashboard() {
             unit="cm"
             icon={TbPoo}
             subtitle={teaLevelSubtitle(data.manure_tea_level)}
+            color="text-warning me-2"
           />
         </Col>
         <Col>
@@ -101,8 +99,9 @@ export default function Dashboard() {
             title="Chicken Feed Level"
             value={data.chicken_feed_level}
             unit="cm"
-            icon={PiBird}
+            icon={PiBowlFood}
             subtitle={cFeedSubtitle(data.chicken_feed_level)}
+            color="text-warning me-2"
           />
         </Col>
         <Col>
@@ -110,8 +109,9 @@ export default function Dashboard() {
             title="Fish Feed Level"
             value={data.fish_feed_level}
             unit="cm"
-            icon={IoFishOutline}
+            icon={PiBowlFood}
             subtitle={fFeedSubtitle(data.fish_feed_level)}
+            color="text-primary me-2"
           />
         </Col>
       </Row>

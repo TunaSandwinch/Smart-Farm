@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, Button, Row, Col, Form, Modal, Spinner, Container } from "react-bootstrap";
 import { supabase } from "../lib/supabaseClient";
+import { FiSun } from "react-icons/fi";
 
 export default function GrowlightScheduleCard({ type }) {
   const tableName =
@@ -239,8 +240,10 @@ export default function GrowlightScheduleCard({ type }) {
   return (
     <Card className="shadow-sm mb-4 mx-auto" style={{ maxWidth: "700px" }}>
       <Card.Body>
-        <Card.Title className="mb-3 text-capitalize text-center">{type} Growlight Schedule</Card.Title>
-
+        <Card.Title className="mb-3 text-capitalize text-center">
+          <FiSun className="me-2 text-warning" size={24} />
+          {type} Growlight Schedule
+        </Card.Title>
         {loading ? (
           <div className="text-center py-3">
             <Spinner animation="border" />
