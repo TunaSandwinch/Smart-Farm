@@ -1,8 +1,8 @@
 export function envHumiditySubtitle(value) {
   if (value == null) return "No data";
-  if (value < 40) return "Too dry";
+  if (value < 40) return "dry";
   if (value <= 60) return "Optimal";
-  return "Too humid";
+  return "humid";
 }
 
 export function envTemperatureSubtitle(value) {
@@ -37,8 +37,8 @@ export function waterTemperatureSubtitle(value) {
 
 export function waterLevelSubtitle(value) {
   if (value == null) return 'No data'
-  if (value >= 40) return 'Normal'
-  if (value >= 20) return 'Low'
+  if (value >= 20) return 'Normal'
+  if (value >= 10) return 'Low'
   return 'Critical Low'
 }
 
@@ -53,6 +53,13 @@ export function phLevelSubtitle(value) {
 export function teaLevelSubtitle(value) {
   if (value == null) return 'No data'
   if (value >= 30) return 'High'
+  if (value >= 15) return 'Normal'
+  return 'Low'
+}
+
+export function chickeWaterLevelSubtitle(value) {
+  if (value == null) return 'No data'
+  if (value >= 18) return 'High'
   if (value >= 15) return 'Normal'
   return 'Low'
 }
