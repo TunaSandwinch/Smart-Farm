@@ -106,6 +106,16 @@ export default function Dashboard() {
         </Col>
         <Col>
           <SensorCard
+            title="Chicken Water Level"
+            value={data.chicken_water_level}
+            unit="cm"
+            icon={BsDroplet}
+            subtitle={waterLevelSubtitle(data.chicken_water_level)}
+            color="text-info me-2"
+          />
+        </Col>
+        <Col>
+          <SensorCard
             title="Fish Feed Level"
             value={data.fish_feed_level}
             unit="cm"
