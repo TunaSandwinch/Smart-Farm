@@ -14,6 +14,7 @@ import {
   waterLevelSubtitle,
   phLevelSubtitle,
   teaLevelSubtitle,
+  chickenWaterLevelSubtitle,
 } from "../utils/sensorUtils.js";
 
 import {
@@ -110,7 +111,7 @@ export default function Dashboard() {
             value={data.chicken_water_level}
             unit="cm"
             icon={BsDroplet}
-            subtitle={waterLevelSubtitle(data.chicken_water_level)}
+            subtitle={chickenWaterLevelSubtitle(data.chicken_water_level)}
             color="text-info me-2"
           />
         </Col>
