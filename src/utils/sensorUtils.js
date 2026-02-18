@@ -57,7 +57,7 @@ export function teaLevelSubtitle(value) {
   return 'Low'
 }
 
-export function chickeWaterLevelSubtitle(value) {
+export function chickenWaterLevelSubtitle(value) {
   if (value == null) return 'No data'
   if (value >= 18) return 'High'
   if (value >= 15) return 'Normal'
